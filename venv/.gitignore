@@ -1,0 +1,19 @@
+# Ignore the virtual environment folder (commonly named "env" or "venv")
+env/
+venv/
+
+# Ignore the .env file to prevent committing sensitive information
+.env
+
+# Other common Python files to ignore
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
