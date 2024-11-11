@@ -1,0 +1,6 @@
+Flask
+openai
+Pillow
+requests
+python-dotenv
+SQLAlchemy
