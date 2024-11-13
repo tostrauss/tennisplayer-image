@@ -5,14 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tennis Player Image Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Tennis Player Image Generator</h1>
     <form id="image-form">
         <label for="prompt">Enter a prompt:</label><br>
-        <input type="text" id="prompt" name="prompt" required><br><br>
+        <input type="text" id="prompt" name="prompt" placeholder="e.g., Tennis player holding a racket in action" required><br><br>
         <button type="submit">Generate Image</button>
     </form>
+    <div id="loader" style="display: none; text-align: center;">
+        <p>Generating image, please wait...</p>
+    </div>
     <h2>Generated Image:</h2>
     <div id="result">
         <img id="generated-image" src="" alt="Generated image will appear here">
@@ -21,21 +25,32 @@
     <script>
         document.getElementById('image-form').onsubmit = async function (e) {
             e.preventDefault();
+            const loader = document.getElementById('loader');
+            const resultImg = document.getElementById('generated-image');
+            loader.style.display = 'block';
+            resultImg.src = '';
+
             const prompt = document.getElementById('prompt').value;
 
-            const response = await fetch('/generate-image', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ prompt })
-            });
+            try {
+                const response = await fetch('/generate-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
 
-            const data = await response.json();
-            if (data.files && data.files.length > 0) {
-                document.getElementById('generated-image').src = data.files[0];
-            } else {
-                alert('Error: ' + (data.error || 'Image generation failed'));
+                const data = await response.json();
+                if (data.files && data.files.length > 0) {
+                    resultImg.src = data.files[0];
+                } else {
+                    alert('Error: ' + (data.error || 'Image generation failed'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loader.style.display = 'none';
             }
         };
     </script>
